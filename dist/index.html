@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿尔茨海默症早期预警筛查系统</title>
+    <!-- 引入 Bootstrap CSS -->
+    <link rel="stylesheet" href="dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="dist/css/fontawesome.min.css">
+    <style>
+        .body{
+            background-color: #2299be;
+        }
+        .progress-bar {
+            background-color: #2299be;
+            transition: width 2s;
+        }
+        .card {
+            background-image: linear-gradient(rgba(58, 90, 154, 0.8), rgba(85, 189, 223, 0.8));
+            backdrop-filter: blur(5px);
+        }
+        .btn-custom-upload {
+        background-color: #2d5694;
+        color: white;
+        }
+        .btn-custom-process {
+        background-color: #2d5694;
+        color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-lg-8 offset-lg-2">
+                <h1 class="text-center mb-4">阿尔茨海默症早期预警筛查系统</h1>
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="inputFile">上传数据</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="inputFile" name="file">
+                                    <label class="custom-file-label" for="inputFile">选择文件</label>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-custom-upload" onclick="upload()">上传</button>
+                        </form>
+                        <div id="message" class="mt-2"></div>
+                        <button type="button" class="btn btn-custom-process mt-3" onclick="process()">开始处理</button>
+                        <div id="progressBarContainer" class="mt-3" style="display: none;">
+                            <div class="progress">
+                                <div id="progressBar" class="progress-bar" style="width:0%"></div>
+                            </div>
+                        </div>
+                        <div id="resultContainer" class="mt-3" style="display: none;">
+                            <h3>诊断结果:</h3>
+                            <div id="result"></div>
+                            <h3>准确率:</h3>
+                            <div id="accuracy"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+    <script>
+        const inputFile = document.getElementById('inputFile');
+        const message = document.getElementById('message');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultElement = document.getElementById('result');
+        const accuracyElement = document.getElementById('accuracy');
+
+        inputFile.addEventListener('change', () => {
+            if (inputFile.files.length > 0) {
+                const fileName = inputFile.files[0].name;
+                const label = document.querySelector('.custom-file-label');
+                label.textContent = fileName;
+            }
+        });
+
+        async function upload() {
+            const formData = new FormData();
+            formData.append('file', inputFile.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.text();
+                message.textContent = data;
+                message.classList.add('alert', 'alert-info');
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        async function process() {
+            progressBarContainer.style.display = 'block';
+            progressBar.style.width = '50%';
+            try {
+                const response = await fetch('/process_start', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                console.log(data);
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBarContainer.style.display = 'none';
+                    progressBar.style.width = '0%';
+                    resultContainer.style.display = 'block';
+                    resultElement.textContent = data.result;
+                    accuracyElement.textContent = data.acc;
+                }, 1000);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+</script>
+<!-- 引入 jQuery 和 Bootstrap JS -->
+<script src="dist/js/jquery.min.js"></script>
+<script src="dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+

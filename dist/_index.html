@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>阿尔茨海默症早期预警筛查系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+          }
+        body {
+            font-size: 14px;
+        }
+        .background {
+            width: 100%;
+            height: 740px;
+            background: rgba(255,255,255,1);
+            opacity: 1;
+            position: relative;
+            top: 0px;
+            left: 0px;
+            overflow: hidden;
+        }
+        .name {
+            color: #fff;
+        }
+        .backgroundimg{
+            width: 100%;
+            height: 670px;
+            background: url("imgs/background.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            opacity: 1;
+            position: absolute;
+            top: 5px;
+            left: 0px;
+            overflow: hidden;
+        }
+        .button_upload{
+            width: 201px;
+            height: 50px;
+            background-color:transparent;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            border: 2px solid rgba(255,255,255,1);
+            border-radius: 40px;
+            opacity: 1;
+            position: absolute;
+            top: 530px;
+            left: 115px;
+            overflow: hidden;
+        }
+        .button_upload_name{
+            width: 134px;
+            color: rgba(255,255,255,1);
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            font-family: Inter;
+            font-weight: Regular;
+            font-size: 20px;
+            opacity: 1;
+            text-align: center;
+        }
+        .button_start {
+            width: 201px;
+            height: 50px;
+            background-color: darkcyan;
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            border: 0px solid rgba(255,255,255,1);
+            border-radius: 40px;
+            opacity: 1;
+            position: absolute;
+            top: 530px;
+            left: 361px;
+            overflow: hidden;
+        }
+        .button_start_name{
+            width: 159px;
+            color: rgba(255,255,255,1);
+            position: absolute;
+            top: 12px;
+            left: 21px;
+            font-family: Inter;
+            font-weight: Medium;
+            font-size: 20px;
+            opacity: 1;
+            text-align: center;
+        }
+        .custom-file{
+            width: 100%;
+            height: 62px;
+            background: rgba(255,255,255,1);
+            opacity: 1;
+            position: relative;
+            top: 313px;
+            left: 90px;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0px 6px 10px rgba(0.2369791865348816, 0.4455207586288452, 0.7583333253860474, 0.30000001192092896);
+            overflow: hidden;
+        }
+        .sign{
+            width: 205px;
+            color: rgba(132,132,132,1);
+            top: 15px;
+            left:55px;
+            position: relative;
+            font-family: Inter;
+            font-weight: Medium;
+            font-size: 24px;
+            opacity: 1;
+            text-align: left;
+        }
+        .custom-file-input{
+            /* width: 205px;
+            color: rgba(132,132,132,1);
+            position: absolute; */
+            opacity: 0;
+            position: relative;
+            top: -10px;
+            left:55px;
+            /* font-family: Inter;
+            font-weight: Medium;
+            font-size: 24px;
+            opacity: 1;
+            text-align: left; */
+        }
+        .filename{
+            position: relative;
+            left:500px;
+            top: -41px;
+            font-family: Inter;
+            font-weight: Medium;
+            font-size: 24px;
+            color: rgba(132,132,132,1);
+        }
+        .title{
+            width: 913px;
+            color: rgba(255,255,255,1);
+            position: absolute;
+            top: 136px;
+            left: 90px;
+            font-size: 64px;
+            opacity: 1;
+            text-align: left;
+        }
+         #overlay {
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        .popup{
+            background-color: #ffffff;
+            max-width: 400px;
+            min-width: 200px;
+            height: 260px;
+            border-radius: 5px;
+            margin: 100px auto;
+            text-align: center;
+        }
+          .popup_title {
+            height: 60px;
+            line-height: 60px;
+            border-bottom: solid 1px #cccccc;
+        }
+        /* 弹出框的内容 */
+        .content1{
+            display: flex;
+        }
+        .content2{
+            display: flex;
+        }
+        .popup_content1 {
+            width: 150px;
+            height: 35px;
+            line-height: 50px;
+            margin-left: 10px;
+            text-align: left;
+        }
+        #result{
+            margin-top: 30px;
+            width: 150px;
+            height: 35px;
+            text-align: center;
+        }
+        .popup_content2 {
+            width: 150px;
+            height: 35px;
+            line-height: 50px;
+            margin-left: 10px;
+            text-align: left;
+        }
+        #accuracy{
+            margin-top: 30px;
+            width: 150px;
+            height: 35px;
+            text-align: center;
+        }
+        /* 弹出框的按钮栏 */
+        .popup_btn {
+            padding-bottom: 10px;
+        }
+        /* 弹出框的按钮 */
+        .popup_btn button {
+            color: #778899;
+            width: 40%;
+            height: 40px;
+            cursor: pointer;
+            border: solid 1px #cccccc;
+            border-radius: 5px;
+            margin: 5px 10px;
+            color: #ffffff;
+            background-color: #337ab7;
+        }
+        #loader_overlay{
+            position: fixed;
+            left: 0px;
+            top: 0px;
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            /* IE9以下不支持rgba模式 */
+            background-color: rgba(0, 0, 0, 0.5);
+            /* 兼容IE8及以下 */
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#7f000000,endColorstr=#7f000000);
+            display: none;
+        }
+        .loader{
+            background-color:darkseagreen;
+            max-width: 400px;
+            min-width: 200px;
+            height: 40px;
+            border-radius: 5px;
+            margin: 300px auto;
+            color: rgba(132,132,132,1);
+            font-family: Inter;
+            font-weight: Medium;
+            font-size: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+        <div class="background">
+            <div class="name"></div>
+            <div class="backgroundimg"></div>
+            <span class="title">Alzheimer's Disease Early Screening System</span>
+
+                <div class="custom-file">
+                    <div class="sign"> 选择文件 </div>
+                    <input type="file" class="custom-file-input" id="inputFile" name="file">
+                    <div class="filename"></div>
+                    <!-- <label class="custom-file-label" for="inputFile">choose file</label> -->
+                </div>
+             <button type="button" class="button_upload" onclick="upload()">
+                <span class="button_upload_name">上传</span>
+             </button>
+             <button type="button" class="button_start" onclick="process()">
+                <span class="button_start_name">开始处理</span>
+             </button>
+
+            <div id="overlay">
+                <div>
+                    <div class="popup">
+                            <p class="popup_title">处理结果</p>
+                            <div class="content1">
+                                <p class="popup_content1">诊断结果:</p>
+                                <div id="result">......</div>
+                            </div>
+                            <div class="content2">
+                                <p class="popup_content2">准确率:</p>
+                                <div id="accuracy">......</div>
+                            </div>
+                            <div class="popup_btn">
+                            <button class="confirmBtn" onclick="hidePopup()">确认</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="loader_overlay">
+            <h1 class="loader">数据处理中...</h1>
+        </div>
+    </div>
+    <script>
+        const inputFile = document.getElementById('inputFile');
+        //const message = document.getElementById('message');
+        //const progressBarContainer = document.getElementById('progressBarContainer');
+        //const progressBar = document.getElementById('progressBar');
+        //const resultContainer = document.getElementById('resultContainer');
+        const resultElement = document.getElementById('result');
+        const accuracyElement = document.getElementById('accuracy');
+
+        inputFile.addEventListener('change', () => {
+            if (inputFile.files.length > 0) {
+                const fileName = inputFile.files[0].name;
+                const label = document.querySelector('.filename');
+                const sign_=document.querySelector('.sign');
+                label.textContent = fileName;
+                sign_.textContent ="更改文件"
+            }
+        });
+
+        async function upload() {
+            
+            const formData = new FormData();
+            formData.append('file', inputFile.files[0]);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.text();
+                alert("upload success");
+                //message.textContent = data;
+                //message.classList.add('alert', 'alert-info');
+            } catch (error) {
+                console.log(error);
+                alert("upload fail");
+            }
+        }
+        function hidePopup(){
+            var overlay = document.getElementById("overlay");
+            overlay.style.display = "none";
+        }
+          function showPopup(){
+            var overlay = document.getElementById("overlay");
+            overlay.style.display = "block";
+        }
+        function hideloader(){
+            var loader_overlay = document.getElementById("loader_overlay");
+            loader_overlay.style.display = "none";
+        }
+        function showloader(){
+            var loader_overlay = document.getElementById("loader_overlay");
+            loader_overlay.style.display = "block";
+        }
+        async function process() {
+            //progressBarContainer.style.display = 'block';
+            //progressBar.style.width = '50%';
+            showloader();
+            try {
+                const response = await fetch('/process_start', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                console.log(data);
+                //progressBar.style.width = '100%';
+                resultElement.textContent = data.result;
+                accuracyElement.textContent = data.acc;
+                hideloader();
+                showPopup();
+                // setTimeout(() => {
+                //     progressBarContainer.style.display = 'none';
+                //     progressBar.style.width = '0%';
+                //     resultContainer.style.display = 'block';
+                //     resultElement.textContent = data.result;
+                //     accuracyElement.textContent = data.acc;
+                // }, 1000);
+            } catch (error) {
+                hideloader();
+                console.log(error);
+            }
+        }
+</script>
+<!-- 引入 jQuery 和 Bootstrap JS -->
+<script src="dist/js/jquery.min.js"></script>
+<script src="dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+
